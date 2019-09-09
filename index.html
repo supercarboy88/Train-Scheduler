@@ -18,13 +18,13 @@
 </head>
 <body>
     <div class="container">
-        <div class="jumbotron">
+        <div class="jumbotron bg-success">
             <h1 class="text-center">Seattle Train Scheduler</h1>
         </div>
         <div class="row">
             <div class="col-lg-12">
                 <div class="card">
-                    <div class="card-header">
+                    <div class="card-header text-white bg-primary">
                         Current Train Schedule
                     </div>
                     <table class="table table-striped">
@@ -37,6 +37,8 @@
                                 <th scope="col">Monthly Rate($)</th>
                             </tr>
                         </thead>
+                        <tbody id = "train-list">
+                        </tbody>
                     </table>
                 </div>
             </div>
@@ -44,7 +46,7 @@
         <div class="row">
             <div class="col-lg-12">
                 <div class="card">
-                    <div class="card-header">
+                    <div class="card-header text-white bg-primary">
                     Add Train
                     </div>
                     <div class="card-body">
@@ -58,8 +60,8 @@
                                 <input class="form-control" id="destination-input" type="role" placeholder="Portland">
                             </div>
                             <div class="form-group row">
-                                <label for="first-train-input">First Train Time (HH:mm - Military Time</label>
-                                <input class="form-control" id="first-train-input" type="time" placeholder="HH:mm">
+                                <label for="first-train-input">First Train Time (HH:mm - Military Time)</label>
+                                <input class="form-control" id="first-train-input" type="text" placeholder="HH:mm">
                             </div>
                             <div class="form-group row">
                                 <label for="frequencey-input">Frequency</label>
