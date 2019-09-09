@@ -27,13 +27,51 @@
                     <div class="card-header">
                         Current Train Schedule
                     </div>
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th scope="col">Employee Name</th>
+                                <th scope="col">Role</th>
+                                <th scope="col">Start Date</th>
+                                <th scope="col">Months Worked</th>
+                                <th scope="col">Monthly Rate($)</th>
+                            </tr>
+                        </thead>
+                    </table>
                 </div>
             </div>
         </div>
-
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="card">
+                    <div class="card-header">
+                    Add Train
+                    </div>
+                    <div class="card-body">
+                        <form role="form">
+                            <div class="form-group row">
+                                <label for="name-input">Train name</label>
+                                <input class="form-control" id="name-input" type="text" placeholder="Seattle Express">
+                            </div>
+                            <div class="form-group row">
+                                <label for="destination-input">Destination</label>
+                                <input class="form-control" id="destination-input" type="role" placeholder="Portland">
+                            </div>
+                            <div class="form-group row">
+                                <label for="first-train-input">First Train Time (HH:mm - Military Time</label>
+                                <input class="form-control" id="first-train-input" type="time" placeholder="HH:mm">
+                            </div>
+                            <div class="form-group row">
+                                <label for="frequencey-input">Frequency</label>
+                                <input class="form-control" id="frequencey-input" type="number" placeholder="80000">
+                            </div>
+                            <button class="btn btn-default" id="add-train" type="submit">Submit</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
-
-
     <script type="text/javascript" src="assets/javascript/app.js"></script>
 </body>
 </html>
