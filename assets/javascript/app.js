@@ -30,6 +30,10 @@ $("#add-train").on("click", function(event) {
     firstTrain = $("#first-train-input").val().trim();
     frequency = $("#frequencey-input").val().trim();
 
+    // First Time (pushed back 1 year to make sure it comes before current time)
+    var firstTimeConverted = moment(firstTrain, "HH:mm").subtract(1, "years");
+    console.log(firstTimeConverted);
+
     // Code for the push
     database.ref().push({
 
@@ -41,9 +45,6 @@ $("#add-train").on("click", function(event) {
     });
 });
 
-// First Time (pushed back 1 year to make sure it comes before current time)
-var firstTimeConverted = moment(firstTrain, "HH:mm").subtract(1, "years");
-console.log(firstTimeConverted);
 
 database.ref().on("child_added", function(childSnapshot) {
 
