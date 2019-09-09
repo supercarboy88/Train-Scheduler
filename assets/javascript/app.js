@@ -30,9 +30,31 @@ $("#add-train").on("click", function(event) {
     firstTrain = $("#first-train-input").val().trim();
     frequency = $("#frequencey-input").val().trim();
 
-    // // First Time (pushed back 1 year to make sure it comes before current time)
-    // var firstTimeConverted = moment(firstTrain, "HH:mm").subtract(1, "years");
-    // console.log(firstTimeConverted);
+    // First Time (pushed back 1 year to make sure it comes before current time)
+    var firstTimeConverted = moment(firstTrain, "HH:mm").subtract(1, "years");
+    console.log(firstTimeConverted);
+
+    // Current Time
+    var currentTime = moment();
+    console.log("CURRENT TIME: " + moment(currentTime).format("hh:mm"));
+
+    // Difference between the times
+    var diffTime = moment().diff(moment(firstTimeConverted), "minutes");
+    console.log("DIFFERENCE IN TIME: " + diffTime);
+
+    // Time apart (remainder)
+    var tRemainder = diffTime % frequency;
+    console.log(tRemainder);
+
+    // Minute Until Train
+    var tMinutesTillTrain = frequency - tRemainder;
+    console.log("MINUTES TILL TRAIN: " + tMinutesTillTrain);
+
+    // Next Train
+    var nextTrain = moment().add(tMinutesTillTrain, "minutes");
+    var nextTraintime = moment(nextTrain).format("hh:mm");
+    console.log("ARRIVAL TIME: " + moment(nextTrain).format("hh:mm"));
+    console.log(nextTraintime);
 
     // Code for the push
     database.ref().push({
@@ -41,7 +63,9 @@ $("#add-train").on("click", function(event) {
         destination: destination,
         firstTrain: firstTrain,
         frequency: frequency,
-        dateAdded: firebase.database.ServerValue.TIMESTAMP
+        dateAdded: firebase.database.ServerValue.TIMESTAMP,
+        tMinutesTillTrain:tMinutesTillTrain,
+        nextTraintime: nextTraintime
     });
 });
 
@@ -58,8 +82,8 @@ database.ref().on("child_added", function(childSnapshot) {
     $("#train-list").append("<tr><td>" + childSnapshot.val().name + " </td><td> "
     + childSnapshot.val().destination + " </td><td> "
     + childSnapshot.val().frequency + " </td><td> "
-    + childSnapshot.val().firstTrain + " </td><td> "
-    + childSnapshot.val().firstTrain + " </td></tr> ");
+    + childSnapshot.val().nextTraintime + " </td><td> "
+    + childSnapshot.val().tMinutesTillTrain + " </td></tr> ");
 
     // Handle the errors
   }, function(errorObject) {
