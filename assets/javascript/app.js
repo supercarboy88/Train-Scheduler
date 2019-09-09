@@ -53,7 +53,6 @@ database.ref().on("child_added", function(childSnapshot) {
     console.log(childSnapshot.val().destination);
     console.log(childSnapshot.val().firstTrain);
     console.log(childSnapshot.val().frequency);
-    console.log(firstTimeConverted);
 
     // full list of items to the well
     $("#train-list").append("<tr><td>" + childSnapshot.val().name + " </td><td> "
