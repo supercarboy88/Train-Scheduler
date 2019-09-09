@@ -40,6 +40,11 @@ $("#add-train").on("click", function(event) {
         dateAdded: firebase.database.ServerValue.TIMESTAMP
     });
 });
+
+// First Time (pushed back 1 year to make sure it comes before current time)
+var firstTimeConverted = moment(firstTrain, "HH:mm").subtract(1, "years");
+console.log(firstTimeConverted);
+
 database.ref().on("child_added", function(childSnapshot) {
 
     // Log everything that's coming out of snapshot
@@ -47,6 +52,7 @@ database.ref().on("child_added", function(childSnapshot) {
     console.log(childSnapshot.val().destination);
     console.log(childSnapshot.val().firstTrain);
     console.log(childSnapshot.val().frequency);
+    console.log(firstTimeConverted);
 
     // full list of items to the well
     $("#train-list").append("<tr><td>" + childSnapshot.val().name + " </td><td> "
