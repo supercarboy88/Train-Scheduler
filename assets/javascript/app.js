@@ -1,12 +1,12 @@
 // Initialize Firebase
 var config = {
-    apiKey: "AIzaSyDclNjk-yy3r68O-NiSOaL_ST1PVDccx54",
-    authDomain: "uw-bootcamp2019.firebaseapp.com",
-    databaseURL: "https://uw-bootcamp2019.firebaseio.com",
-    projectId: "uw-bootcamp2019",
-    storageBucket: "uw-bootcamp2019.appspot.com",
-    messagingSenderId: "689225463206",
-    appId: "1:689225463206:web:5a5abed561acfc58"
+    apiKey: "AIzaSyCcd2P9yQwNvmFzUutBuxDQPTi1iNU9S4k",
+    authDomain: "train-schedule-520bd.firebaseapp.com",
+    databaseURL: "https://train-schedule-520bd.firebaseio.com",
+    projectId: "train-schedule-520bd",
+    storageBucket: "train-schedule-520bd.appspot.com",
+    messagingSenderId: "1079022582679",
+    appId: "1:1079022582679:web:57adc62966d8ad89fc62d2"
 };
 firebase.initializeApp(config);
 
@@ -30,9 +30,9 @@ $("#add-train").on("click", function(event) {
     firstTrain = $("#first-train-input").val().trim();
     frequency = $("#frequencey-input").val().trim();
 
-    // First Time (pushed back 1 year to make sure it comes before current time)
-    var firstTimeConverted = moment(firstTrain, "HH:mm").subtract(1, "years");
-    console.log(firstTimeConverted);
+    // // First Time (pushed back 1 year to make sure it comes before current time)
+    // var firstTimeConverted = moment(firstTrain, "HH:mm").subtract(1, "years");
+    // console.log(firstTimeConverted);
 
     // Code for the push
     database.ref().push({
