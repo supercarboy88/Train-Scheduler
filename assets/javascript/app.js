@@ -31,12 +31,12 @@ $("#add-train").on("click", function(event) {
     frequency = $("#frequencey-input").val().trim();
 
     // First Time (pushed back 1 year to make sure it comes before current time)
-    var firstTimeConverted = moment(firstTrain, "HH:mm").subtract(1, "years");
+    var firstTimeConverted = moment(firstTrain, "HH:mm A").subtract(1, "years");
     console.log(firstTimeConverted);
 
     // Current Time
     var currentTime = moment();
-    console.log("CURRENT TIME: " + moment(currentTime).format("hh:mm"));
+    console.log("CURRENT TIME: " + moment(currentTime).format("hh:mm A"));
 
     // Difference between the times
     var diffTime = moment().diff(moment(firstTimeConverted), "minutes");
@@ -52,8 +52,8 @@ $("#add-train").on("click", function(event) {
 
     // Next Train
     var nextTrain = moment().add(tMinutesTillTrain, "minutes");
-    var nextTraintime = moment(nextTrain).format("hh:mm");
-    console.log("ARRIVAL TIME: " + moment(nextTrain).format("hh:mm"));
+    var nextTraintime = moment(nextTrain).format("hh:mm A");
+    console.log("ARRIVAL TIME: " + moment(nextTrain).format("hh:mm A"));
     console.log(nextTraintime);
 
     // Code for the push
