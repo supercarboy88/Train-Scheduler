@@ -1,3 +1,7 @@
+$(document).ready(function(){
+    $('[data-toggle="tooltip"]').tooltip();   
+  });
+
 // Initialize Firebase
 var config = {
     apiKey: "AIzaSyCcd2P9yQwNvmFzUutBuxDQPTi1iNU9S4k",
@@ -79,13 +83,64 @@ database.ref().on("child_added", function(childSnapshot) {
     console.log(childSnapshot.val().frequency);
 
     // full list of items to the well
-    $("#train-list").append("<tr><td>" + childSnapshot.val().name + " </td><td> "
+    $("#train-list").append("<tr class='table-row' id=" + "'" + childSnapshot.key + "'" + ">" + 
+    "<td>" + childSnapshot.val().name + " </td><td> "
     + childSnapshot.val().destination + " </td><td> "
     + childSnapshot.val().frequency + " </td><td> "
     + childSnapshot.val().nextTraintime + " </td><td> "
-    + childSnapshot.val().tMinutesTillTrain + " </td></tr> ");
+    + childSnapshot.val().tMinutesTillTrain + " </td>" + "<td>" + '<b data-placement="top" data-toggle="tooltip" title="Edit"><button class="btn btn-primary btn-xs update" data-title="Edit" data-toggle="modal" data-target="#edit">Update</button></b>'+' '
+    + '<b data-placement="top" data-toggle="tooltip" title="Delete"><button class="btn btn-primary id="remove-train"class="btn btn-danger btn-xs delete" data-title="Delete" data-toggle="modal" data-target="#delete">Delete</button></b>' +
+    "</td></tr>");
 
     // Handle the errors
   }, function(errorObject) {
     console.log("Errors handled: " + errorObject.code);
   });
+
+    //Capturing the key to update and the row index when edit is clicked
+    $("body").on("click", ".update", function() {
+        keyToUpdate = $(this).parent().parent().parent().attr('id');
+        indexToUpdate = $(this).parent().parent().parent().index();
+
+        // Calling row values from Database
+        var databaseRow = database.ref().child(keyToUpdate);
+        databaseRow.on("value", function(childSnapshot) {
+            var row = childSnapshot.val();
+            console.log(row.destination);
+
+            //Populating form fields from database row
+            $("#modal-trainName").val(row.name);
+            $("#modal-trainDestination").val(row.destination);
+            $("#modal-trainTime").val(row.nextTraintime.split(" ")[0]);
+            console.log(row.nextTraintime.split(" "));
+            $("#modal-trainFrequeny").val(row.frequency);
+            console.log(row.frequency);
+
+        });
+
+    });
+
+     // Updating the database rows	
+     $(".modal-footer").on("click", "#update-train", function() {
+
+      var databaseRow = database.ref().child(keyToUpdate);
+      databaseRow.on("value", function(snapshot) {
+
+          //Getting the values from the form
+          var TrainNameupdated = $("#modal-trainName").val().trim();
+          var TrainDestinationupdated = $("#modal-trainDestination").val().trim();
+          var TrainTimeupdated = $("#modal-trainTime").val().trim();
+          var TrainFrequency = $("#modal-trainFrequeny").val().trim();
+
+          //Populating form fields from database row
+          databaseRow.update({
+              'name': TrainNameupdated,
+              'destination': TrainDestinationupdated,
+              'nextTraintime': TrainTimeupdated,
+              'frequency': TrainFrequency
+          });
+          //Reloading the page
+          location.reload();
+
+      });
+    });
