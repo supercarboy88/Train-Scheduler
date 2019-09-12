@@ -13,6 +13,11 @@ firebase.initializeApp(config);
 // Create a variable to reference the database
 var database = firebase.database();
 
+//Run Time  
+setInterval(function(startTime) {
+    $("#timer").html(moment().format('hh:mm a'))
+  }, 1000);
+
 // Initial Values
 var name = "";
 var destination = "";
