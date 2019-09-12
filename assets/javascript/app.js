@@ -22,6 +22,8 @@ var name = "";
 var destination = "";
 var firstTrain = "";
 var frequency= "";
+var indexToUpdate;
+var keyToUpdate;
 
 $("#add-train").on("click", function(event) {
     event.preventDefault();
@@ -89,7 +91,7 @@ database.ref().on("child_added", function(childSnapshot) {
     + childSnapshot.val().frequency + " </td><td> "
     + childSnapshot.val().nextTraintime + " </td><td> "
     + childSnapshot.val().tMinutesTillTrain + " </td>" + "<td>" + '<b data-placement="top" data-toggle="tooltip" title="Edit"><button class="btn btn-primary btn-xs update" data-title="Edit" data-toggle="modal" data-target="#edit">Update</button></b>'+' '
-    + '<b data-placement="top" data-toggle="tooltip" title="Delete"><button class="btn btn-primary id="remove-train"class="btn btn-danger btn-xs delete" data-title="Delete" data-toggle="modal" data-target="#delete">Delete</button></b>' +
+    + '<b data-placement="top" data-toggle="tooltip" title="Delete"><button class="btn btn-primary id="remove-train "class="btn btn-danger btn-xs delete" data-title="Delete" data-toggle="modal" data-target="#delete">Delete</button></b>' +
     "</td></tr>");
 
     // Handle the errors
@@ -97,50 +99,96 @@ database.ref().on("child_added", function(childSnapshot) {
     console.log("Errors handled: " + errorObject.code);
   });
 
-    //Capturing the key to update and the row index when edit is clicked
-    $("body").on("click", ".update", function() {
-        keyToUpdate = $(this).parent().parent().parent().attr('id');
-        indexToUpdate = $(this).parent().parent().parent().index();
+//Capturing the key to update and the row index when edit is clicked
+$("body").on("click", ".update", function() {
+    keyToUpdate = $(this).parent().parent().parent().attr('id');
+ 
+    console.log(keyToUpdate);
 
-        // Calling row values from Database
-        var databaseRow = database.ref().child(keyToUpdate);
-        databaseRow.on("value", function(childSnapshot) {
-            var row = childSnapshot.val();
-            console.log(row.destination);
+    // Calling row values from Database
+    var databaseRow = database.ref().child(keyToUpdate);
+    databaseRow.on("value", function(childSnapshot) {
+        var row = childSnapshot.val();
+        console.log(row.destination);
 
-            //Populating form fields from database row
-            $("#modal-trainName").val(row.name);
-            $("#modal-trainDestination").val(row.destination);
-            $("#modal-trainTime").val(row.nextTraintime.split(" ")[0]);
-            console.log(row.nextTraintime.split(" "));
-            $("#modal-trainFrequeny").val(row.frequency);
-            console.log(row.frequency);
+        //Populating form fields from database row
+        $("#modal-trainName").val(row.name);
+        $("#modal-trainDestination").val(row.destination);
+        $("#modal-trainTime").val(row.nextTraintime.split(" ")[0]);
+        console.log(row.nextTraintime.split(" "));
+        $("#modal-trainFrequeny").val(row.frequency);
+        console.log(row.frequency);
 
+    });
+
+});
+
+    // Updating the database rows	
+    $(".modal-footer").on("click", "#update-train", function() {
+
+    var databaseRow = database.ref().child(keyToUpdate);
+    databaseRow.on("value", function(snapshot) {
+
+        //Getting the values from the form
+        var TrainNameupdated = $("#modal-trainName").val().trim();
+        var TrainDestinationupdated = $("#modal-trainDestination").val().trim();
+        var TrainTimeupdated = $("#modal-trainTime").val().trim();
+        var TrainFrequency = $("#modal-trainFrequeny").val().trim();
+
+        //Calculate the new minutes to arrival
+        var TrainTimeupdatedConvert = moment(TrainTimeupdated, "HH:mm A").subtract(1, "years");
+        var diffTimeUpdated = moment().diff(moment(TrainTimeupdatedConvert), "minutes");
+        var tRemainderUpdated = diffTimeUpdated % TrainFrequency;
+        var tMinutesTillTrainUpdated = TrainFrequency - tRemainderUpdated;
+
+        //Populating form fields from database row
+        databaseRow.update({
+            'name': TrainNameupdated,
+            'destination': TrainDestinationupdated,
+            'nextTraintime': TrainTimeupdated,
+            'tMinutesTillTrain': tMinutesTillTrainUpdated
         });
+        //Reloading the page
+        location.reload();
 
     });
+});
 
-     // Updating the database rows	
-     $(".modal-footer").on("click", "#update-train", function() {
 
-      var databaseRow = database.ref().child(keyToUpdate);
-      databaseRow.on("value", function(snapshot) {
+   //Capturing the key to update and the row index when delete is clicked
+   $("body").on("click", ".delete", function() {
+    keyToUpdate = $(this).parent().parent().parent().attr('id');
+    console.log(keyToUpdate);
+});
 
-          //Getting the values from the form
-          var TrainNameupdated = $("#modal-trainName").val().trim();
-          var TrainDestinationupdated = $("#modal-trainDestination").val().trim();
-          var TrainTimeupdated = $("#modal-trainTime").val().trim();
-          var TrainFrequency = $("#modal-trainFrequeny").val().trim();
+$(".modal-footer").on("click", "#remove-train", function() {
+    keyToUpdate = $(this).parent().parent().parent().attr('id');
+    //Remove tr from page
+    $("#train-list tbody").remove();
 
-          //Populating form fields from database row
-          databaseRow.update({
-              'name': TrainNameupdated,
-              'destination': TrainDestinationupdated,
-              'nextTraintime': TrainTimeupdated,
-              'frequency': TrainFrequency
-          });
-          //Reloading the page
-          location.reload();
+    // document.getElementById("myTable").deleteRow(indexToUpdate+1);
+    $("#delete").modal("hide");
 
-      });
-    });
+    // Remove childkey from database
+    database.ref().child(keyToUpdate).remove();
+
+});
+
+    // //Capturing the key to update and the row index when delete is clicked
+    // $("body").on("click", ".delete", function() {
+    //     keyToUpdate = $(this).parent().parent().parent().attr('id');
+    //     indexToUpdate = $(this).parent().parent().parent().index();
+    //     console.log(keyToUpdate);
+    // });
+
+    // $(".modal-footer").on("click", "#remove-train", function() {
+    //     //Remove tr from page
+    //     $("#train-list tbody id").remove();
+
+    //     // document.getElementById("myTable").deleteRow(indexToUpdate+1);
+    //     $("#delete").modal("hide");
+
+    //     // Remove childkey from database
+    //     database.ref().child(keyToUpdate).remove();
+
+    // });
